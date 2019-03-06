@@ -1,25 +1,8 @@
 package com.github.mmolimar.kafka.connect.fs.file.reader.hdfs;
 
-import com.github.mmolimar.kafka.connect.fs.file.Offset;
-import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
-import com.github.mmolimar.kafka.connect.fs.file.reader.ParquetFileReader;
-import org.apache.avro.AvroRuntimeException;
-import org.apache.avro.Schema;
-import org.apache.avro.SchemaBuilder;
-import org.apache.avro.SchemaParseException;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.connect.data.Struct;
-import org.apache.kafka.connect.errors.DataException;
-import org.apache.parquet.avro.AvroParquetWriter;
-import org.apache.parquet.hadoop.ParquetFileWriter;
-import org.apache.parquet.hadoop.ParquetWriter;
-import org.apache.parquet.io.InvalidRecordException;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +11,31 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
+import org.apache.avro.AvroRuntimeException;
+import org.apache.avro.Schema;
+import org.apache.avro.SchemaBuilder;
+import org.apache.avro.SchemaParseException;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericRecord;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+
+import org.apache.kafka.connect.data.Struct;
+import org.apache.kafka.connect.errors.DataException;
+
+import org.apache.parquet.avro.AvroParquetWriter;
+import org.apache.parquet.hadoop.ParquetFileWriter;
+import org.apache.parquet.hadoop.ParquetWriter;
+import org.apache.parquet.io.InvalidRecordException;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.github.mmolimar.kafka.connect.fs.file.Offset;
+import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
+import com.github.mmolimar.kafka.connect.fs.file.reader.ParquetFileReader;
 
 public class ParquetFileReaderTest extends HdfsFileReaderTestBase {
 
@@ -54,7 +61,7 @@ public class ParquetFileReaderTest extends HdfsFileReaderTestBase {
         projectionSchema = new Schema.Parser().parse(
                 ParquetFileReaderTest.class.getResourceAsStream("/file/reader/schemas/people_projection.avsc"));
 
-        try (ParquetWriter writer = AvroParquetWriter.<GenericRecord>builder(new Path(parquetFile.toURI()))
+        try (ParquetWriter<GenericRecord> writer = AvroParquetWriter.<GenericRecord>builder(new Path(parquetFile.toURI()))
                 .withConf(fs.getConf()).withWriteMode(ParquetFileWriter.Mode.OVERWRITE).withSchema(readerSchema).build()) {
 
             IntStream.range(0, NUM_RECORDS).forEach(index -> {
@@ -77,7 +84,9 @@ public class ParquetFileReaderTest extends HdfsFileReaderTestBase {
 
     @Test
     public void readerWithSchema() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 8118258337446684543L;
+		{
             put(ParquetFileReader.FILE_READER_PARQUET_SCHEMA, readerSchema.toString());
         }};
         reader = getReader(FileSystem.newInstance(fsUri, new Configuration()), dataFile, cfg);
@@ -86,7 +95,9 @@ public class ParquetFileReaderTest extends HdfsFileReaderTestBase {
 
     @Test(expected = DataException.class)
     public void readerWithProjection() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -3987178418328814L;
+		{
             put(ParquetFileReader.FILE_READER_PARQUET_PROJECTION, projectionSchema.toString());
         }};
         reader = getReader(FileSystem.newInstance(fsUri, new Configuration()), dataFile, cfg);
@@ -107,7 +118,9 @@ public class ParquetFileReaderTest extends HdfsFileReaderTestBase {
                 .fields()
                 .name("field1").type("string").noDefault()
                 .endRecord();
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 1184291604766572456L;
+		{
             put(ParquetFileReader.FILE_READER_PARQUET_PROJECTION, testSchema.toString());
         }};
         reader = getReader(FileSystem.newInstance(fsUri, new Configuration()), dataFile, cfg);
@@ -116,7 +129,9 @@ public class ParquetFileReaderTest extends HdfsFileReaderTestBase {
 
     @Test(expected = AvroRuntimeException.class)
     public void readerWithInvalidSchema() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 2403116435575290756L;
+		{
             put(ParquetFileReader.FILE_READER_PARQUET_SCHEMA, Schema.create(Schema.Type.STRING).toString());
         }};
         reader = getReader(FileSystem.newInstance(fsUri, new Configuration()), dataFile, cfg);
@@ -125,7 +140,9 @@ public class ParquetFileReaderTest extends HdfsFileReaderTestBase {
 
     @Test(expected = SchemaParseException.class)
     public void readerWithUnparseableSchema() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -6077124838443525436L;
+		{
             put(ParquetFileReader.FILE_READER_PARQUET_SCHEMA, "invalid schema");
         }};
         getReader(FileSystem.newInstance(fsUri, new Configuration()), dataFile, cfg);
@@ -148,4 +165,4 @@ public class ParquetFileReaderTest extends HdfsFileReaderTestBase {
         return FILE_EXTENSION;
     }
 
-}
+} // ParquetFileReaderTest

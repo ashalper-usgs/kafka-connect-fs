@@ -1,20 +1,6 @@
 package com.github.mmolimar.kafka.connect.fs.file.reader.hdfs;
 
-import com.github.mmolimar.kafka.connect.fs.file.Offset;
-import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
-import com.github.mmolimar.kafka.connect.fs.file.reader.AvroFileReader;
-import org.apache.avro.AvroTypeException;
-import org.apache.avro.Schema;
-import org.apache.avro.SchemaParseException;
-import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.GenericDatumWriter;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.io.DatumWriter;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.connect.data.Struct;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +9,25 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertTrue;
+import org.apache.avro.AvroTypeException;
+import org.apache.avro.Schema;
+import org.apache.avro.SchemaParseException;
+import org.apache.avro.file.DataFileWriter;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.DatumWriter;
+
+import org.apache.hadoop.fs.Path;
+
+import org.apache.kafka.connect.data.Struct;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.github.mmolimar.kafka.connect.fs.file.Offset;
+import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
+import com.github.mmolimar.kafka.connect.fs.file.reader.AvroFileReader;
 
 public class AvroFileReaderTest extends HdfsFileReaderTestBase {
 
@@ -70,7 +74,9 @@ public class AvroFileReaderTest extends HdfsFileReaderTestBase {
 
     @Test
     public void readerWithSchema() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -914573056473649552L;
+		{
             put(AvroFileReader.FILE_READER_AVRO_SCHEMA, schema.toString());
         }};
         reader = getReader(fs, dataFile, cfg);
@@ -79,7 +85,9 @@ public class AvroFileReaderTest extends HdfsFileReaderTestBase {
 
     @Test(expected = AvroTypeException.class)
     public void readerWithInvalidSchema() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 8161440139741983905L;
+		{
             put(AvroFileReader.FILE_READER_AVRO_SCHEMA, Schema.create(Schema.Type.STRING).toString());
         }};
         reader = getReader(fs, dataFile, cfg);
@@ -88,7 +96,9 @@ public class AvroFileReaderTest extends HdfsFileReaderTestBase {
 
     @Test(expected = SchemaParseException.class)
     public void readerWithUnparseableSchema() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -6742277016134378442L;
+		{
             put(AvroFileReader.FILE_READER_AVRO_SCHEMA, "invalid schema");
         }};
         getReader(fs, dataFile, cfg);
@@ -110,4 +120,5 @@ public class AvroFileReaderTest extends HdfsFileReaderTestBase {
     protected String getFileExtension() {
         return FILE_EXTENSION;
     }
-}
+    
+} // AvroFileReaderTest

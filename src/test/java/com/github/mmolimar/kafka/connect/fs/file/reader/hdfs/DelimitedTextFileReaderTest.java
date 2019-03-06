@@ -1,15 +1,8 @@
 package com.github.mmolimar.kafka.connect.fs.file.reader.hdfs;
 
-import com.github.mmolimar.kafka.connect.fs.file.Offset;
-import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
-import com.github.mmolimar.kafka.connect.fs.file.reader.DelimitedTextFileReader;
-import com.github.mmolimar.kafka.connect.fs.file.reader.FileReader;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.connect.data.Struct;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,7 +13,19 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+
+import org.apache.kafka.connect.data.Struct;
+
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import com.github.mmolimar.kafka.connect.fs.file.Offset;
+import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
+import com.github.mmolimar.kafka.connect.fs.file.reader.DelimitedTextFileReader;
+import com.github.mmolimar.kafka.connect.fs.file.reader.FileReader;
 
 public class DelimitedTextFileReaderTest extends HdfsFileReaderTestBase {
 
@@ -34,7 +39,9 @@ public class DelimitedTextFileReaderTest extends HdfsFileReaderTestBase {
     public static void setUp() throws IOException {
         readerClass = AgnosticFileReader.class;
         dataFile = createDataFile(true);
-        readerConfig = new HashMap<String, Object>() {{
+        readerConfig = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -694350413090338285L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "true");
         }};
@@ -85,7 +92,9 @@ public class DelimitedTextFileReaderTest extends HdfsFileReaderTestBase {
     @Test
     public void readAllDataWithoutHeader() throws Throwable {
         Path file = createDataFile(false);
-        FileReader reader = getReader(fs, file, new HashMap<String, Object>() {{
+        FileReader reader = getReader(fs, file, new HashMap<String, Object>() {
+			private static final long serialVersionUID = -8623826722951303841L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "false");
         }});
@@ -99,7 +108,6 @@ public class DelimitedTextFileReaderTest extends HdfsFileReaderTestBase {
             recordCount++;
         }
         assertEquals("The number of records in the file does not match", NUM_RECORDS, recordCount);
-
     }
 
     @Test
@@ -110,7 +118,9 @@ public class DelimitedTextFileReaderTest extends HdfsFileReaderTestBase {
             writer.append("dummy\n");
             writer.append("dummy\n");
         }
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 1083668255656386739L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "true");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_DEFAULT_VALUE, "custom_value");
@@ -136,7 +146,9 @@ public class DelimitedTextFileReaderTest extends HdfsFileReaderTestBase {
     @Test
     public void seekFileWithoutHeader() throws Throwable {
         Path file = createDataFile(false);
-        FileReader reader = getReader(fs, file, new HashMap<String, Object>() {{
+        FileReader reader = getReader(fs, file, new HashMap<String, Object>() {
+			private static final long serialVersionUID = 4200109703485246862L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "false");
         }});
@@ -168,7 +180,9 @@ public class DelimitedTextFileReaderTest extends HdfsFileReaderTestBase {
 
     @Test
     public void validFileEncoding() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 914457844088004529L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "true");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_ENCODING, "Cp1252");
@@ -178,7 +192,9 @@ public class DelimitedTextFileReaderTest extends HdfsFileReaderTestBase {
 
     @Test(expected = UnsupportedCharsetException.class)
     public void invalidFileEncoding() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 6346549433503048283L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "true");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_ENCODING, "invalid_charset");
@@ -207,4 +223,5 @@ public class DelimitedTextFileReaderTest extends HdfsFileReaderTestBase {
     protected String getFileExtension() {
         return FILE_EXTENSION;
     }
-}
+    
+} // DelimitedTextFileReaderTest

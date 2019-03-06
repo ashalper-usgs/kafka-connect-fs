@@ -1,13 +1,9 @@
 package com.github.mmolimar.kafka.connect.fs.connector;
 
-import com.github.mmolimar.kafka.connect.fs.FsSourceConnector;
-import com.github.mmolimar.kafka.connect.fs.FsSourceTask;
-import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
-import org.apache.kafka.connect.errors.ConnectException;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +12,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
+import org.apache.kafka.connect.errors.ConnectException;
+
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import com.github.mmolimar.kafka.connect.fs.FsSourceConnector;
+import com.github.mmolimar.kafka.connect.fs.FsSourceTask;
+import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
 
 public class FsSourceConnectorTest {
     @ClassRule
@@ -29,7 +34,9 @@ public class FsSourceConnectorTest {
     public void setup() throws IOException {
         connector = new FsSourceConnector();
 
-        Map<String, String> cfg = new HashMap<String, String>() {{
+        Map<String, String> cfg = new HashMap<String, String>() {
+			private static final long serialVersionUID = -3701945794481058489L;
+		{
             put(FsSourceTaskConfig.FS_URIS, String.join(",",
                     temporaryFolder.getRoot().toURI() + File.separator + "dir1",
                     temporaryFolder.getRoot().toURI() + File.separator + "dir2",

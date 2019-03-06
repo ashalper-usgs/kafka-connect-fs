@@ -1,13 +1,6 @@
 package com.github.mmolimar.kafka.connect.fs.file.reader.hdfs;
 
-import com.github.mmolimar.kafka.connect.fs.file.Offset;
-import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
-import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.connect.data.Struct;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -18,7 +11,16 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertTrue;
+import org.apache.hadoop.fs.Path;
+import org.apache.kafka.connect.data.Struct;
+
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import com.github.mmolimar.kafka.connect.fs.file.Offset;
+import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
+import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
 
 public class TextFileReaderTest extends HdfsFileReaderTestBase {
 
@@ -29,7 +31,9 @@ public class TextFileReaderTest extends HdfsFileReaderTestBase {
     public static void setUp() throws IOException {
         readerClass = AgnosticFileReader.class;
         dataFile = createDataFile();
-        readerConfig = new HashMap<String, Object>() {{
+        readerConfig = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 3637216963180939631L;
+		{
             put(TextFileReader.FILE_READER_TEXT_FIELD_NAME_VALUE, FIELD_NAME_VALUE);
         }};
     }
@@ -67,7 +71,9 @@ public class TextFileReaderTest extends HdfsFileReaderTestBase {
 
     @Test
     public void validFileEncoding() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 359019581871897519L;
+		{
             put(TextFileReader.FILE_READER_TEXT_FIELD_NAME_VALUE, FIELD_NAME_VALUE);
             put(TextFileReader.FILE_READER_TEXT_ENCODING, "Cp1252");
         }};
@@ -77,7 +83,9 @@ public class TextFileReaderTest extends HdfsFileReaderTestBase {
 
     @Test(expected = UnsupportedCharsetException.class)
     public void invalidFileEncoding() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -6708093832090088815L;
+		{
             put(TextFileReader.FILE_READER_TEXT_FIELD_NAME_VALUE, FIELD_NAME_VALUE);
             put(TextFileReader.FILE_READER_TEXT_ENCODING, "invalid_charset");
         }};
@@ -99,4 +107,4 @@ public class TextFileReaderTest extends HdfsFileReaderTestBase {
         return FILE_EXTENSION;
     }
 
-}
+} // TextFileReaderTest
