@@ -47,16 +47,18 @@ public class FsSourceTask extends SourceTask {
 
             if (config.getClass(FsSourceTaskConfig.POLICY_CLASS).isAssignableFrom(Policy.class)) {
                 throw new ConfigException("Policy class " +
-                        config.getClass(FsSourceTaskConfig.POLICY_CLASS) + "is not a sublass of " + Policy.class);
+                        config.getClass(FsSourceTaskConfig.POLICY_CLASS) + "is not a subclass of " + Policy.class);
             }
             if (config.getClass(FsSourceTaskConfig.FILE_READER_CLASS).isAssignableFrom(FileReader.class)) {
                 throw new ConfigException("FileReader class " +
-                        config.getClass(FsSourceTaskConfig.FILE_READER_CLASS) + "is not a sublass of " + FileReader.class);
+                        config.getClass(FsSourceTaskConfig.FILE_READER_CLASS) + "is not a subclass of " + FileReader.class);
             }
 
-            Class<Policy> policyClass = (Class<Policy>) Class.forName(properties.get(FsSourceTaskConfig.POLICY_CLASS));
-            FsSourceTaskConfig taskConfig = new FsSourceTaskConfig(properties);
-            policy = ReflectionUtils.makePolicy(policyClass, taskConfig);
+            // see https://stackoverflow.com/questions/1733799/generics-and-class-forname/1733963
+			final Class<? extends Policy> policyClass =
+				(Class<? extends Policy>) Class.forName(properties.get(FsSourceTaskConfig.POLICY_CLASS)).asSubclass(Policy.class);
+			FsSourceTaskConfig taskConfig = new FsSourceTaskConfig(properties);
+			policy = ReflectionUtils.makePolicy(policyClass, taskConfig);
         } catch (ConfigException ce) {
             log.error("Couldn't start FsSourceTask:", ce);
             throw new ConnectException("Couldn't start FsSourceTask due to configuration error", ce);
