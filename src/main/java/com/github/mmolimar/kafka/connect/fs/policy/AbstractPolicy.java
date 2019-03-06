@@ -1,29 +1,39 @@
 package com.github.mmolimar.kafka.connect.fs.policy;
 
-import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
-import com.github.mmolimar.kafka.connect.fs.file.FileMetadata;
-import com.github.mmolimar.kafka.connect.fs.file.reader.FileReader;
-import com.github.mmolimar.kafka.connect.fs.util.ReflectionUtils;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
+
 import org.apache.kafka.common.utils.Utils;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.errors.IllegalWorkerStateException;
 import org.apache.kafka.connect.storage.OffsetStorageReader;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
+import com.github.mmolimar.kafka.connect.fs.file.FileMetadata;
+import com.github.mmolimar.kafka.connect.fs.file.reader.FileReader;
+import com.github.mmolimar.kafka.connect.fs.util.ReflectionUtils;
 
 abstract class AbstractPolicy implements Policy {
 
@@ -133,7 +143,6 @@ abstract class AbstractPolicy implements Policy {
         return new Iterator<FileMetadata>() {
             RemoteIterator<LocatedFileStatus> it = fs.listFiles(fs.getWorkingDirectory(), recursive);
             LocatedFileStatus current = null;
-            boolean previous = false;
 
             @Override
             public boolean hasNext() {
@@ -190,7 +199,9 @@ abstract class AbstractPolicy implements Policy {
 
     @Override
     public FileReader offer(FileMetadata metadata, OffsetStorageReader offsetStorageReader) throws IOException {
-        Map<String, Object> partition = new HashMap<String, Object>() {{
+        Map<String, Object> partition = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 1545647042231646980L;
+		{
             put("path", metadata.getPath());
             //TODO manage blocks
             //put("blocks", metadata.getBlocks().toString());
