@@ -1,16 +1,18 @@
 package com.github.mmolimar.kafka.connect.fs.util;
 
-import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
-import com.github.mmolimar.kafka.connect.fs.file.reader.FileReader;
-import com.github.mmolimar.kafka.connect.fs.policy.Policy;
-import org.apache.commons.lang.reflect.ConstructorUtils;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
+
+import org.apache.commons.lang.reflect.ConstructorUtils;
+
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+
+import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
+import com.github.mmolimar.kafka.connect.fs.file.reader.FileReader;
+import com.github.mmolimar.kafka.connect.fs.policy.Policy;
 
 public class ReflectionUtils {
 
@@ -27,7 +29,7 @@ public class ReflectionUtils {
         try {
             Class[] constClasses = Arrays.stream(args).map(arg -> arg.getClass()).toArray(Class[]::new);
 
-            Constructor constructor = ConstructorUtils.getMatchingAccessibleConstructor(clazz, constClasses);
+            Constructor<?> constructor = ConstructorUtils.getMatchingAccessibleConstructor(clazz, constClasses);
             return (T) constructor.newInstance(args);
         } catch (IllegalAccessException |
                 InstantiationException |
@@ -35,4 +37,4 @@ public class ReflectionUtils {
             throw e.getCause();
         }
     }
-}
+} // ReflectionUtils
