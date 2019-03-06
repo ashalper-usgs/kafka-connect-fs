@@ -1,12 +1,7 @@
 package com.github.mmolimar.kafka.connect.fs.policy.hdfs;
 
-import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
-import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
-import com.github.mmolimar.kafka.connect.fs.policy.HdfsFileWatcherPolicy;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.connect.errors.IllegalWorkerStateException;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,14 +9,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.apache.hadoop.fs.Path;
+import org.apache.kafka.connect.errors.IllegalWorkerStateException;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
+import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
+import com.github.mmolimar.kafka.connect.fs.policy.HdfsFileWatcherPolicy;
 
 public class HdfsFileWatcherPolicyTest extends HdfsPolicyTestBase {
 
     @BeforeClass
     public static void setUp() throws IOException {
-        directories = new ArrayList<Path>() {{
+        directories = new ArrayList<Path>() {
+			private static final long serialVersionUID = -1641075612869025550L;
+		{
             add(new Path(fsUri.toString(), UUID.randomUUID().toString()));
             add(new Path(fsUri.toString(), UUID.randomUUID().toString()));
         }};
@@ -29,7 +33,9 @@ public class HdfsFileWatcherPolicyTest extends HdfsPolicyTestBase {
             fs.mkdirs(dir);
         }
 
-        Map<String, String> cfg = new HashMap<String, String>() {{
+        Map<String, String> cfg = new HashMap<String, String>() {
+			private static final long serialVersionUID = -9066334446714164409L;
+		{
             String uris[] = directories.stream().map(dir -> dir.toString())
                     .toArray(size -> new String[size]);
             put(FsSourceTaskConfig.FS_URIS, String.join(",", uris));
@@ -43,14 +49,14 @@ public class HdfsFileWatcherPolicyTest extends HdfsPolicyTestBase {
         taskConfig = new FsSourceTaskConfig(cfg);
     }
 
-    //This policy does not throw any exception. Just stop watching those nonexistent dirs
+    // This policy does not throw any exception. Just stop watching those nonexistent dirs
     @Test
     @Override
     public void invalidDirectory() throws IOException {
         super.invalidDirectory();
     }
 
-    //This policy never ends at least all watchers die
+    // This policy never ends at least all watchers die
     @Test
     @Override
     public void hasEnded() throws IOException {
@@ -71,4 +77,4 @@ public class HdfsFileWatcherPolicyTest extends HdfsPolicyTestBase {
         policy.execute();
     }
 
-}
+} // HdfsFileWatcherPolicyTest

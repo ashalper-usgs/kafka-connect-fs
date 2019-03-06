@@ -1,17 +1,7 @@
 package com.github.mmolimar.kafka.connect.fs.file.reader.local;
 
-import com.github.mmolimar.kafka.connect.fs.file.Offset;
-import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
-import com.github.mmolimar.kafka.connect.fs.file.reader.SequenceFileReader;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.SequenceFile;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.util.ReflectionUtils;
-import org.apache.kafka.connect.data.Struct;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,8 +10,21 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.SequenceFile;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.util.ReflectionUtils;
+
+import org.apache.kafka.connect.data.Struct;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.github.mmolimar.kafka.connect.fs.file.Offset;
+import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
+import com.github.mmolimar.kafka.connect.fs.file.reader.SequenceFileReader;
 
 public class SequenceFileReaderTest extends LocalFileReaderTestBase {
 
@@ -33,7 +36,9 @@ public class SequenceFileReaderTest extends LocalFileReaderTestBase {
     public static void setUp() throws IOException {
         readerClass = AgnosticFileReader.class;
         dataFile = createDataFile();
-        readerConfig = new HashMap<String, Object>() {{
+        readerConfig = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 1083305845710670654L;
+		{
             put(SequenceFileReader.FILE_READER_SEQUENCE_FIELD_NAME_KEY, FIELD_NAME_KEY);
             put(SequenceFileReader.FILE_READER_SEQUENCE_FIELD_NAME_VALUE, FIELD_NAME_VALUE);
             put(AgnosticFileReader.FILE_READER_AGNOSTIC_EXTENSIONS_SEQUENCE, FILE_EXTENSION);
@@ -74,7 +79,9 @@ public class SequenceFileReaderTest extends LocalFileReaderTestBase {
 
     @Test
     public void defaultFieldNames() throws Throwable {
-        Map<String, Object> customReaderCfg = new HashMap<String, Object>() {{
+        Map<String, Object> customReaderCfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -256474849274928390L;
+		{
             put(AgnosticFileReader.FILE_READER_AGNOSTIC_EXTENSIONS_SEQUENCE, getFileExtension());
         }};
         reader = getReader(fs, dataFile, customReaderCfg);
@@ -110,4 +117,5 @@ public class SequenceFileReaderTest extends LocalFileReaderTestBase {
     protected String getFileExtension() {
         return FILE_EXTENSION;
     }
-}
+    
+} // SequenceFileReaderTest

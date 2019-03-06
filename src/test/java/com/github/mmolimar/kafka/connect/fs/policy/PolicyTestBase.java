@@ -1,17 +1,8 @@
 package com.github.mmolimar.kafka.connect.fs.policy;
 
-import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
-import com.github.mmolimar.kafka.connect.fs.file.FileMetadata;
-import com.github.mmolimar.kafka.connect.fs.util.ReflectionUtils;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.common.config.ConfigException;
-import org.apache.kafka.connect.errors.IllegalWorkerStateException;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +14,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
+import org.apache.commons.collections.map.HashedMap;
+
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+
+import org.apache.kafka.common.config.ConfigException;
+import org.apache.kafka.connect.errors.IllegalWorkerStateException;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
+import com.github.mmolimar.kafka.connect.fs.file.FileMetadata;
+import com.github.mmolimar.kafka.connect.fs.util.ReflectionUtils;
 
 public abstract class PolicyTestBase {
 

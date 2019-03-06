@@ -1,14 +1,7 @@
 package com.github.mmolimar.kafka.connect.fs.policy.hdfs;
 
-import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
-import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
-import com.github.mmolimar.kafka.connect.fs.policy.Policy;
-import com.github.mmolimar.kafka.connect.fs.policy.SleepyPolicy;
-import com.github.mmolimar.kafka.connect.fs.util.ReflectionUtils;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.common.config.ConfigException;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,14 +9,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.apache.hadoop.fs.Path;
+import org.apache.kafka.common.config.ConfigException;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
+import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
+import com.github.mmolimar.kafka.connect.fs.policy.Policy;
+import com.github.mmolimar.kafka.connect.fs.policy.SleepyPolicy;
+import com.github.mmolimar.kafka.connect.fs.util.ReflectionUtils;
 
 public class SleepyPolicyTest extends HdfsPolicyTestBase {
 
     @BeforeClass
     public static void setUp() throws IOException {
-        directories = new ArrayList<Path>() {{
+        directories = new ArrayList<Path>() {
+			private static final long serialVersionUID = -3620690991387312951L;
+		{
             add(new Path(fsUri.toString(), UUID.randomUUID().toString()));
             add(new Path(fsUri.toString(), UUID.randomUUID().toString()));
         }};
@@ -31,7 +35,9 @@ public class SleepyPolicyTest extends HdfsPolicyTestBase {
             fs.mkdirs(dir);
         }
 
-        Map<String, String> cfg = new HashMap<String, String>() {{
+        Map<String, String> cfg = new HashMap<String, String>() {
+			private static final long serialVersionUID = 622490951149693814L;
+		{
             String uris[] = directories.stream().map(dir -> dir.toString())
                     .toArray(size -> new String[size]);
             put(FsSourceTaskConfig.FS_URIS, String.join(",", uris));
@@ -106,4 +112,4 @@ public class SleepyPolicyTest extends HdfsPolicyTestBase {
         assertTrue(policy.hasEnded());
     }
 
-}
+} // SleepyPolicyTest

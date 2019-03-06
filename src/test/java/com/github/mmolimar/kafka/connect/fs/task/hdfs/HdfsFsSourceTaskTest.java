@@ -1,10 +1,7 @@
 package com.github.mmolimar.kafka.connect.fs.task.hdfs;
 
-import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.connect.data.Struct;
-import org.apache.kafka.connect.source.SourceRecord;
-import org.junit.BeforeClass;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -14,14 +11,22 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.apache.hadoop.fs.Path;
+
+import org.apache.kafka.connect.data.Struct;
+import org.apache.kafka.connect.source.SourceRecord;
+
+import org.junit.BeforeClass;
+
+import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
 
 public class HdfsFsSourceTaskTest extends HdfsFsSourceTaskTestBase {
 
     @BeforeClass
     public static void setUp() throws IOException {
-        directories = new ArrayList<Path>() {{
+        directories = new ArrayList<Path>() {
+			private static final long serialVersionUID = 1438625216532812759L;
+		{
             add(new Path(fsUri.toString(), UUID.randomUUID().toString()));
             add(new Path(fsUri.toString(), UUID.randomUUID().toString()));
         }};
@@ -63,4 +68,5 @@ public class HdfsFsSourceTaskTest extends HdfsFsSourceTaskTestBase {
         }
         return txtFile;
     }
-}
+    
+} // HdfsFsSourceTaskTest

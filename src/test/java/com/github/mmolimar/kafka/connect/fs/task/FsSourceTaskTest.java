@@ -1,21 +1,25 @@
 package com.github.mmolimar.kafka.connect.fs.task;
 
-import com.github.mmolimar.kafka.connect.fs.FsSourceTask;
-import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
-import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
-import com.github.mmolimar.kafka.connect.fs.policy.SimplePolicy;
-import org.apache.kafka.connect.errors.ConnectException;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import org.apache.kafka.connect.errors.ConnectException;
+
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import com.github.mmolimar.kafka.connect.fs.FsSourceTask;
+import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
+import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
+import com.github.mmolimar.kafka.connect.fs.policy.SimplePolicy;
 
 public class FsSourceTaskTest {
     @ClassRule
@@ -28,7 +32,9 @@ public class FsSourceTaskTest {
     public void setup() throws IOException {
         task = new FsSourceTask();
 
-        taskConfig = new HashMap<String, String>() {{
+        taskConfig = new HashMap<String, String>() {
+			private static final long serialVersionUID = -9058351833005635526L;
+		{
             put(FsSourceTaskConfig.FS_URIS, String.join(",",
                     temporaryFolder.getRoot().toURI() + File.separator + "dir1",
                     temporaryFolder.getRoot().toURI() + File.separator + "dir2",
@@ -97,4 +103,4 @@ public class FsSourceTaskTest {
         assertFalse("unknown".equalsIgnoreCase(task.version()));
     }
 
-}
+} // FsSourceTaskTest

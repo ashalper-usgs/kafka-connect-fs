@@ -1,24 +1,7 @@
 package com.github.mmolimar.kafka.connect.fs.task;
 
-import com.github.mmolimar.kafka.connect.fs.FsSourceTask;
-import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
-import com.github.mmolimar.kafka.connect.fs.file.reader.AvroFileReader;
-import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
-import com.github.mmolimar.kafka.connect.fs.policy.Policy;
-import com.github.mmolimar.kafka.connect.fs.policy.SimplePolicy;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.connect.errors.ConnectException;
-import org.apache.kafka.connect.source.SourceRecord;
-import org.apache.kafka.connect.source.SourceTaskContext;
-import org.apache.kafka.connect.storage.OffsetStorageReader;
-import org.easymock.EasyMock;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-import org.powermock.api.easymock.PowerMock;
-import org.powermock.api.support.membermodification.MemberModifier;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,8 +12,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.kafka.connect.errors.ConnectException;
+import org.apache.kafka.connect.source.SourceRecord;
+import org.apache.kafka.connect.source.SourceTaskContext;
+import org.apache.kafka.connect.storage.OffsetStorageReader;
+
+import org.easymock.EasyMock;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.api.support.membermodification.MemberModifier;
+
+import com.github.mmolimar.kafka.connect.fs.FsSourceTask;
+import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
+import com.github.mmolimar.kafka.connect.fs.file.reader.AvroFileReader;
+import com.github.mmolimar.kafka.connect.fs.file.reader.TextFileReader;
+import com.github.mmolimar.kafka.connect.fs.policy.Policy;
+import com.github.mmolimar.kafka.connect.fs.policy.SimplePolicy;
 
 public abstract class FsSourceTaskTestBase {
 
@@ -53,7 +57,9 @@ public abstract class FsSourceTaskTestBase {
     @Before
     public void initTask() {
         task = new FsSourceTask();
-        taskConfig = new HashMap<String, String>() {{
+        taskConfig = new HashMap<String, String>() {
+			private static final long serialVersionUID = -7870516452988376510L;
+		{
             String uris[] = directories.stream().map(dir -> dir.toString())
                     .toArray(size -> new String[size]);
             put(FsSourceTaskConfig.FS_URIS, String.join(",", uris));
@@ -74,11 +80,15 @@ public abstract class FsSourceTaskTestBase {
                 .andReturn(offsetStorageReader);
 
         EasyMock.expect(offsetStorageReader.offset(EasyMock.anyObject()))
-                .andReturn(new HashMap<String, Object>() {{
+                .andReturn(new HashMap<String, Object>() {
+					private static final long serialVersionUID = 6774653186934901357L;
+				{
                     put("offset", 5L);
                 }});
         EasyMock.expect(offsetStorageReader.offset(EasyMock.anyObject()))
-                .andReturn(new HashMap<String, Object>() {{
+                .andReturn(new HashMap<String, Object>() {
+					private static final long serialVersionUID = -4766301838584594882L;
+				{
                     put("offset", 5L);
                 }});
 
@@ -184,4 +194,4 @@ public abstract class FsSourceTaskTestBase {
 
     protected abstract void createDataFile(Path path) throws IOException;
 
-}
+} // FsSourceTaskTestBase

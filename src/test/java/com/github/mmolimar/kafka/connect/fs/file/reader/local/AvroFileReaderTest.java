@@ -1,20 +1,6 @@
 package com.github.mmolimar.kafka.connect.fs.file.reader.local;
 
-import com.github.mmolimar.kafka.connect.fs.file.Offset;
-import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
-import com.github.mmolimar.kafka.connect.fs.file.reader.AvroFileReader;
-import org.apache.avro.AvroTypeException;
-import org.apache.avro.Schema;
-import org.apache.avro.SchemaParseException;
-import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.GenericDatumWriter;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.io.DatumWriter;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.connect.data.Struct;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +9,25 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertTrue;
+import org.apache.avro.AvroTypeException;
+import org.apache.avro.Schema;
+import org.apache.avro.SchemaParseException;
+import org.apache.avro.file.DataFileWriter;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.DatumWriter;
+
+import org.apache.hadoop.fs.Path;
+
+import org.apache.kafka.connect.data.Struct;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.github.mmolimar.kafka.connect.fs.file.Offset;
+import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
+import com.github.mmolimar.kafka.connect.fs.file.reader.AvroFileReader;
 
 public class AvroFileReaderTest extends LocalFileReaderTestBase {
 
@@ -39,7 +43,9 @@ public class AvroFileReaderTest extends LocalFileReaderTestBase {
         schema = new Schema.Parser().parse(AvroFileReaderTest.class.getResourceAsStream("/file/reader/schemas/people.avsc"));
         readerClass = AgnosticFileReader.class;
         dataFile = createDataFile();
-        readerConfig = new HashMap<String, Object>() {{
+        readerConfig = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -3019224135359771283L;
+		{
             put(AgnosticFileReader.FILE_READER_AGNOSTIC_EXTENSIONS_AVRO, FILE_EXTENSION);
         }};
     }
@@ -72,7 +78,9 @@ public class AvroFileReaderTest extends LocalFileReaderTestBase {
 
     @Test
     public void readerWithSchema() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -8706580361452935652L;
+		{
             put(AvroFileReader.FILE_READER_AVRO_SCHEMA, schema.toString());
             put(AgnosticFileReader.FILE_READER_AGNOSTIC_EXTENSIONS_AVRO, getFileExtension());
         }};
@@ -82,7 +90,9 @@ public class AvroFileReaderTest extends LocalFileReaderTestBase {
 
     @Test(expected = AvroTypeException.class)
     public void readerWithInvalidSchema() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -8868277827913797274L;
+		{
             put(AvroFileReader.FILE_READER_AVRO_SCHEMA, Schema.create(Schema.Type.STRING).toString());
             put(AgnosticFileReader.FILE_READER_AGNOSTIC_EXTENSIONS_AVRO, getFileExtension());
         }};
@@ -92,7 +102,9 @@ public class AvroFileReaderTest extends LocalFileReaderTestBase {
 
     @Test(expected = SchemaParseException.class)
     public void readerWithUnparseableSchema() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 4111790030252874051L;
+		{
             put(AvroFileReader.FILE_READER_AVRO_SCHEMA, "invalid schema");
             put(AgnosticFileReader.FILE_READER_AGNOSTIC_EXTENSIONS_AVRO, getFileExtension());
         }};
@@ -116,4 +128,4 @@ public class AvroFileReaderTest extends LocalFileReaderTestBase {
         return FILE_EXTENSION;
     }
 
-}
+} // AvroFileReaderTest

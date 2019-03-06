@@ -1,15 +1,8 @@
 package com.github.mmolimar.kafka.connect.fs.file.reader.local;
 
-import com.github.mmolimar.kafka.connect.fs.file.Offset;
-import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
-import com.github.mmolimar.kafka.connect.fs.file.reader.DelimitedTextFileReader;
-import com.github.mmolimar.kafka.connect.fs.file.reader.FileReader;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.connect.data.Struct;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,7 +13,19 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+
+import org.apache.kafka.connect.data.Struct;
+
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import com.github.mmolimar.kafka.connect.fs.file.Offset;
+import com.github.mmolimar.kafka.connect.fs.file.reader.AgnosticFileReader;
+import com.github.mmolimar.kafka.connect.fs.file.reader.DelimitedTextFileReader;
+import com.github.mmolimar.kafka.connect.fs.file.reader.FileReader;
 
 public class DelimitedTextFileReaderTest extends LocalFileReaderTestBase {
 
@@ -34,7 +39,9 @@ public class DelimitedTextFileReaderTest extends LocalFileReaderTestBase {
     public static void setUp() throws IOException {
         readerClass = AgnosticFileReader.class;
         dataFile = createDataFile(true);
-        readerConfig = new HashMap<String, Object>() {{
+        readerConfig = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -8699107693780299702L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "true");
             put(AgnosticFileReader.FILE_READER_AGNOSTIC_EXTENSIONS_DELIMITED, FILE_EXTENSION);
@@ -78,7 +85,9 @@ public class DelimitedTextFileReaderTest extends LocalFileReaderTestBase {
     public void invaliConfigArgs() throws Throwable {
         try {
             readerClass.getConstructor(FileSystem.class, Path.class, Map.class).newInstance(fs, dataFile,
-                    new HashMap<String, Object>() {{
+                    new HashMap<String, Object>() {
+						private static final long serialVersionUID = 4971032363342775387L;
+					{
                         put(AgnosticFileReader.FILE_READER_AGNOSTIC_EXTENSIONS_DELIMITED, FILE_EXTENSION);
                     }});
         } catch (Exception e) {
@@ -89,7 +98,9 @@ public class DelimitedTextFileReaderTest extends LocalFileReaderTestBase {
     @Test
     public void readAllDataWithoutHeader() throws Throwable {
         Path file = createDataFile(false);
-        FileReader reader = getReader(fs, file, new HashMap<String, Object>() {{
+        FileReader reader = getReader(fs, file, new HashMap<String, Object>() {
+			private static final long serialVersionUID = 7368699199179261540L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "false");
             put(AgnosticFileReader.FILE_READER_AGNOSTIC_EXTENSIONS_DELIMITED, getFileExtension());
@@ -115,7 +126,9 @@ public class DelimitedTextFileReaderTest extends LocalFileReaderTestBase {
             writer.append("dummy\n");
             writer.append("dummy\n");
         }
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 7299058927379380798L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "true");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_DEFAULT_VALUE, "custom_value");
@@ -142,7 +155,9 @@ public class DelimitedTextFileReaderTest extends LocalFileReaderTestBase {
     @Test
     public void seekFileWithoutHeader() throws Throwable {
         Path file = createDataFile(false);
-        FileReader reader = getReader(fs, file, new HashMap<String, Object>() {{
+        FileReader reader = getReader(fs, file, new HashMap<String, Object>() {
+			private static final long serialVersionUID = -210603393851736887L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "false");
             put(AgnosticFileReader.FILE_READER_AGNOSTIC_EXTENSIONS_DELIMITED, getFileExtension());
@@ -170,12 +185,13 @@ public class DelimitedTextFileReaderTest extends LocalFileReaderTestBase {
 
         reader.seek(getOffset(OFFSETS_BY_INDEX.get(NUM_RECORDS - 1) + 1, false));
         assertFalse(reader.hasNext());
-
     }
 
     @Test
     public void validFileEncoding() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -2045253350744252364L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "true");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_ENCODING, "Cp1252");
@@ -186,7 +202,9 @@ public class DelimitedTextFileReaderTest extends LocalFileReaderTestBase {
 
     @Test(expected = UnsupportedCharsetException.class)
     public void invalidFileEncoding() throws Throwable {
-        Map<String, Object> cfg = new HashMap<String, Object>() {{
+        Map<String, Object> cfg = new HashMap<String, Object>() {
+			private static final long serialVersionUID = -8850211055547693316L;
+		{
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_TOKEN, ",");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_HEADER, "true");
             put(DelimitedTextFileReader.FILE_READER_DELIMITED_ENCODING, "invalid_charset");
@@ -216,4 +234,5 @@ public class DelimitedTextFileReaderTest extends LocalFileReaderTestBase {
     protected String getFileExtension() {
         return FILE_EXTENSION;
     }
-}
+    
+} // DelimitedTextFileReaderTest
