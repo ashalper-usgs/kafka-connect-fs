@@ -1,13 +1,13 @@
 package com.github.mmolimar.kafka.connect.fs.file.reader;
 
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.connect.data.Struct;
+import static com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig.FILE_READER_PREFIX;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig.FILE_READER_PREFIX;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.kafka.connect.data.Struct;
 
 public abstract class AbstractFileReader<T> implements FileReader {
 
@@ -15,7 +15,7 @@ public abstract class AbstractFileReader<T> implements FileReader {
     private final Path filePath;
     private ReaderAdapter<T> adapter;
 
-    public AbstractFileReader(FileSystem fs, Path filePath, ReaderAdapter adapter, Map<String, Object> config) {
+    public AbstractFileReader(FileSystem fs, Path filePath, ReaderAdapter<T> adapter, Map<String, Object> config) {
         if (fs == null || filePath == null) {
             throw new IllegalArgumentException("fileSystem and filePath are required");
         }
@@ -50,4 +50,4 @@ public abstract class AbstractFileReader<T> implements FileReader {
         return adapter;
     }
 
-}
+} // AbstractFileReader<T>
