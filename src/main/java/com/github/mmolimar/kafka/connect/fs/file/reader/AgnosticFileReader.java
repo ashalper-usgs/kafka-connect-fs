@@ -1,17 +1,18 @@
 package com.github.mmolimar.kafka.connect.fs.file.reader;
 
-import com.github.mmolimar.kafka.connect.fs.file.Offset;
-import com.github.mmolimar.kafka.connect.fs.util.ReflectionUtils;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.kafka.connect.data.Struct;
+import static com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig.FILE_READER_PREFIX;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig.FILE_READER_PREFIX;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.kafka.connect.data.Struct;
+
+import com.github.mmolimar.kafka.connect.fs.file.Offset;
+import com.github.mmolimar.kafka.connect.fs.util.ReflectionUtils;
 
 public class AgnosticFileReader extends AbstractFileReader<AgnosticFileReader.AgnosticRecord> {
 
