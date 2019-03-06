@@ -1,22 +1,22 @@
 package com.github.mmolimar.kafka.connect.fs;
 
-import com.github.mmolimar.kafka.connect.fs.file.reader.FileReader;
-import com.github.mmolimar.kafka.connect.fs.policy.Policy;
-import com.github.mmolimar.kafka.connect.fs.util.Version;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
 import org.apache.kafka.connect.connector.Task;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceConnector;
 import org.apache.kafka.connect.util.ConnectorUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.github.mmolimar.kafka.connect.fs.util.Version;
 
 public class FsSourceConnector extends SourceConnector {
 
@@ -71,11 +71,12 @@ public class FsSourceConnector extends SourceConnector {
 
     @Override
     public void stop() {
-        //Nothing to do
+        // Nothing to do
     }
 
     @Override
     public ConfigDef config() {
         return FsSourceConnectorConfig.conf();
     }
-}
+    
+} // FsSourceConnector
