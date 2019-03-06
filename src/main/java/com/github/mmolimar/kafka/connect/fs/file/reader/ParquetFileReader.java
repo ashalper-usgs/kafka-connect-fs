@@ -1,7 +1,11 @@
 package com.github.mmolimar.kafka.connect.fs.file.reader;
 
-import com.github.mmolimar.kafka.connect.fs.file.Offset;
-import io.confluent.connect.avro.AvroData;
+import static com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig.FILE_READER_PREFIX;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
@@ -14,11 +18,9 @@ import org.apache.parquet.avro.AvroParquetReader;
 import org.apache.parquet.avro.AvroReadSupport;
 import org.apache.parquet.hadoop.ParquetReader;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import com.github.mmolimar.kafka.connect.fs.file.Offset;
 
-import static com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig.FILE_READER_PREFIX;
+import io.confluent.connect.avro.AvroData;
 
 public class ParquetFileReader extends AbstractFileReader<GenericRecord> {
 
@@ -52,7 +54,7 @@ public class ParquetFileReader extends AbstractFileReader<GenericRecord> {
         if (this.projection != null) {
             AvroReadSupport.setRequestedProjection(configuration, this.projection);
         }
-        ParquetReader reader = AvroParquetReader.<GenericRecord>builder(getFilePath())
+        ParquetReader<GenericRecord> reader = AvroParquetReader.<GenericRecord>builder(getFilePath())
                 .withConf(configuration).build();
         return reader;
     }
