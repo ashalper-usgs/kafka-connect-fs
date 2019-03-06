@@ -1,25 +1,32 @@
 package com.github.mmolimar.kafka.connect.fs;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import org.apache.kafka.common.config.ConfigException;
+import org.apache.kafka.connect.data.Struct;
+import org.apache.kafka.connect.errors.ConnectException;
+import org.apache.kafka.connect.source.SourceRecord;
+import org.apache.kafka.connect.source.SourceTask;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.mmolimar.kafka.connect.fs.file.FileMetadata;
 import com.github.mmolimar.kafka.connect.fs.file.Offset;
 import com.github.mmolimar.kafka.connect.fs.file.reader.FileReader;
 import com.github.mmolimar.kafka.connect.fs.policy.Policy;
 import com.github.mmolimar.kafka.connect.fs.util.ReflectionUtils;
 import com.github.mmolimar.kafka.connect.fs.util.Version;
-import org.apache.kafka.common.config.ConfigException;
-import org.apache.kafka.connect.data.Struct;
-import org.apache.kafka.connect.errors.ConnectException;
-import org.apache.kafka.connect.source.SourceRecord;
-import org.apache.kafka.connect.source.SourceTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class FsSourceTask extends SourceTask {
     private static final Logger log = LoggerFactory.getLogger(FsSourceTask.class);
@@ -93,7 +100,7 @@ public class FsSourceTask extends SourceTask {
         } catch (IOException | ConnectException e) {
             //when an exception happens executing the policy, the connector continues
             log.error("Cannot retrive files to process from FS: " + policy.getURIs() + ". Keep going...", e);
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
@@ -105,7 +112,8 @@ public class FsSourceTask extends SourceTask {
     private SourceRecord convert(FileMetadata metadata, Offset offset, Struct struct) {
         return new SourceRecord(
                 new HashMap<String, Object>() {
-                    {
+					private static final long serialVersionUID = 1L;
+					{
                         put("path", metadata.getPath());
                         //TODO manage blocks
                         //put("blocks", metadata.getBlocks().toString());
