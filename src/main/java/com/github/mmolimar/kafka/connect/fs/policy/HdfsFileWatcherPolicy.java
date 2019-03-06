@@ -1,7 +1,15 @@
 package com.github.mmolimar.kafka.connect.fs.policy;
 
-import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
-import com.github.mmolimar.kafka.connect.fs.file.FileMetadata;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.AbstractQueue;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
@@ -12,25 +20,25 @@ import org.apache.hadoop.hdfs.inotify.Event;
 import org.apache.hadoop.hdfs.inotify.EventBatch;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.errors.IllegalWorkerStateException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import com.github.mmolimar.kafka.connect.fs.FsSourceTaskConfig;
+import com.github.mmolimar.kafka.connect.fs.file.FileMetadata;
 
 public class HdfsFileWatcherPolicy extends AbstractPolicy {
 
     private static final Logger log = LoggerFactory.getLogger(HdfsFileWatcherPolicy.class);
     private static final String URI_PREFIX = "hdfs://";
 
-    private final Queue<FileMetadata> fileQueue;
+    private final AbstractQueue<FileMetadata> fileQueue;
     private Map<FileSystem, EventStreamThread> fsEvenStream;
 
     public HdfsFileWatcherPolicy(FsSourceTaskConfig conf) throws IOException {
         super(conf);
-        this.fileQueue = new ConcurrentLinkedQueue();
+        
+        this.fileQueue = new ConcurrentLinkedQueue<FileMetadata>();
         startWatchers();
     }
 
